@@ -2015,7 +2015,7 @@ export default function App() {
                 {!demoMode && (activeTab === "rides" ? ridesLoading : impactLoading) ? "Loading…" : "Refresh"}
               </button>
             )}
-            {import.meta.env.DEV && !demoMode && <button type="button" onClick={loadDemoData} className={"h-11 rounded-lg px-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 " + FOCUS_RING}>Load demo data</button>}
+            {!demoMode && <button type="button" onClick={loadDemoData} className={"h-11 rounded-lg px-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 " + FOCUS_RING}>Load demo data</button>}
             <button type="button" onClick={signOut} className={"h-11 rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-slate-100 " + FOCUS_RING}>
               Sign out
             </button>

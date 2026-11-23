@@ -9,7 +9,7 @@ A campus ride-sharing app for Bennett University students. Students sign in with
 - Past rides stay visible to their poster and members; completed rides can be counted in campus impact.
 - Ride-mate phone details are available only while an upcoming ride is active.
 - Direct client edits to ride records are removed; cancellation goes through a database check.
-- Updated spacing and app background, removed a remote font dependency, and hid demo-data controls from production builds.
+- Updated spacing and app background, removed a remote font dependency, and kept demo data available as a local-only preview that is not saved to Supabase.
 
 ## Apply to an existing project
 
