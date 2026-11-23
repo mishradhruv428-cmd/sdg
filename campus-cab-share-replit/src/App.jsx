@@ -1212,13 +1212,9 @@ function RideDetailsScreen({ ride, user, profile, confirmation, onBack, onDataCh
     setActionBusy(true);
     setActionError("");
     try {
-      const { error } = await supabase
-        .from("rides")
-        .update({ status: "cancelled", updated_at: new Date().toISOString() })
-        .eq("id", details.id)
-        .eq("posted_by", user.id)
-        .select("id")
-        .single();
+      const { error } = await supabase.rpc("cancel_ride", {
+        p_ride_id: details.id,
+      });
       if (error) throw error;
       setDetails((current) => current ? { ...current, status: "cancelled" } : current);
       setNotice("Ride cancelled. It no longer appears in Rides.");
@@ -1330,10 +1326,10 @@ function RideDetailsScreen({ ride, user, profile, confirmation, onBack, onDataCh
           isCancelled ? <p className="rounded-xl bg-red-50 px-4 py-3 text-center text-sm font-semibold text-red-800">Cancelled</p> : isCompleted ? <p className="rounded-xl bg-slate-100 px-4 py-3 text-center text-sm font-semibold text-slate-700">Completed</p> : !confirmCancel && <button type="button" disabled={actionBusy} onClick={() => setConfirmCancel(true)} className={"h-12 w-full rounded-xl border border-red-300 bg-white px-4 text-base font-semibold text-red-700 hover:bg-red-50 disabled:opacity-60 " + FOCUS_RING}>Cancel ride</button>
         ) : isCompleted ? (
           <p className="rounded-xl bg-slate-100 px-4 py-3 text-center text-sm font-semibold text-slate-700">Completed</p>
-        ) : hasJoined ? (
-          <button type="button" disabled={actionBusy} onClick={leaveRide} className={"h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60 " + FOCUS_RING}>{actionBusy ? "Updating…" : "Leave ride"}</button>
         ) : isCancelled ? (
           <p className="rounded-xl bg-red-50 px-4 py-3 text-center text-sm font-semibold text-red-800">Cancelled</p>
+        ) : hasJoined ? (
+          <button type="button" disabled={actionBusy} onClick={leaveRide} className={"h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60 " + FOCUS_RING}>{actionBusy ? "Updating…" : "Leave ride"}</button>
         ) : isFull ? (
           <button type="button" disabled className="h-12 w-full cursor-not-allowed rounded-xl bg-slate-200 px-4 text-base font-semibold text-slate-600">Full</button>
         ) : womenBlocked ? (
@@ -2003,8 +1999,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');`}</style>
+    <div className="min-h-screen bg-slate-50 text-slate-900" style={{ fontFamily: "Inter, ui-sans-serif, system-ui, sans-serif" }}>
       <header className="border-b border-slate-100 bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-3">
@@ -2020,7 +2015,7 @@ export default function App() {
                 {!demoMode && (activeTab === "rides" ? ridesLoading : impactLoading) ? "Loading…" : "Refresh"}
               </button>
             )}
-            {!demoMode && <button type="button" onClick={loadDemoData} className={"h-11 rounded-lg px-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 " + FOCUS_RING}>Load demo data</button>}
+            {import.meta.env.DEV && !demoMode && <button type="button" onClick={loadDemoData} className={"h-11 rounded-lg px-3 text-sm font-semibold text-slate-700 hover:bg-slate-100 " + FOCUS_RING}>Load demo data</button>}
             <button type="button" onClick={signOut} className={"h-11 rounded-lg px-3 text-sm font-semibold text-slate-600 hover:bg-slate-100 " + FOCUS_RING}>
               Sign out
             </button>
